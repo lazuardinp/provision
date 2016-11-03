@@ -39,8 +39,15 @@ if os.getuid() == 0:
 	os.system("add-apt-repository ppa:docky-core/stable")
 	os.system("add-apt-repository ppa:n-muench/burg")
 	os.system("add-apt-repository ppa:noobslab/themes")
+
+	#----- Kali Linux Repository -----#
 	os.system("apt-key adv --keyserver pgp.mit.edu --recv-keys ED444FF07D8D0BF6")
 	os.system("echo 'deb http://http.kali.org/kali kali-rolling main contrib non-free' >> /etc/apt/sources.list")
+
+	#----- Docker Repository Ubuntu 16.04 -----#
+	os.system("sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D")
+	os.system("echo 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' >> /etc/apt/sources.list.d/docker.list")	
+
 	os.system("apt update")
 
 	#----- Install LAMP + MongoDB Package -----#
@@ -50,11 +57,19 @@ if os.getuid() == 0:
 	os.system("apt install nmap sqlmap metasploit-framework dsniff driftnet aircrack-ng uniscan hamster-sidejack -y")
 
 	#----- Install Development Package -----#
-	os.system("apt install build-essential g++ gcc python-dev python-setuptools python-pip python-mysqldb filezilla git git-core vim autoconf automake libgtk-3-dev -y")
+	os.system("apt install build-essential g++ gcc python-dev python-setuptools python-pip python-mysqldb filezilla git git-core vim autoconf automake libgtk-3-dev docker-engine -y")
 	os.system("pip install --upgrade pip")
 	os.system("pip install fabric fabtools flask pycurl pymongo mongoengine tabulate flask-socketio")
 
 	#----- Install Multimedia Package -----#
 	os.system('apt install vlc audacious gimp arc-flatabulous-theme -y')
+
+	#----- Enable Docker -----#
+	os.system("usermod -aG docker lazuardi")
+	os.system("sed -i 's/nameserver 127.0.1.1/nameserver 10.10.4.1/g' /etc/resolv.conf")
+	os.system("sed -i 's/8.8.4.4/10.10.4.1/g' /etc/default/docker")
+	os.system("systemctl enable docker")
+	os.system("service docker restart")
+
 else:
 	print "Cannot run as Mortal.."
